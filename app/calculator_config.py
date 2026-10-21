@@ -29,7 +29,7 @@ class CalculatorConfig:
                 max_input_value: Optional[Number] = None,
                 default_encoding: Optional[str] = None):
             project_root = get_project_root()
-            self.base_dir = Path(os.getenv('CALCULATOR_LOG_DIR', project_root / 'logger.py'))
+            self.base_dir = Path(os.getenv('CALCULATOR_LOG_DIR', project_root / 'logs'))
             self.history_dir = Path(os.getenv('CALCULATOR_HISTORY_DIR', project_root / 'calcHistory'))
             self.max_history = int(os.getenv('CALCULATOR_MAX_HISTORY', 20))
             self.auto_save = os.getenv('CALCULATOR_AUTO_SAVE', 'True').lower() in ('true', '1', 'yes')
@@ -38,7 +38,7 @@ class CalculatorConfig:
             self.default_encoding = os.getenv('CALCULATOR_DEFAULT_ENCODING', 'utf-8')
     @property
     def log_dir(self) -> Path:
-        return Path(os.getenv('CALCULATOR_LOG_DIR', get_project_root() / 'app'))
+        return Path(os.getenv('CALCULATOR_LOG_DIR', get_project_root() / 'logs'))
 
     @property
     def history_dir(self) -> Path:
@@ -50,8 +50,7 @@ class CalculatorConfig:
 
     @property
     def log_file(self) -> Path:
-        return Path(os.getenv('CALCULATOR_LOG_FILE', self.log_dir / 'app/logger.py'))
-
+        return Path(os.getenv('CALCULATOR_LOG_FILE', str(self.log_dir / 'app.log')))
     def validate(self) -> None:
          if self.max_history <= 0:
             raise ConfigurationError("max_history must be a positive integer.")
