@@ -2,7 +2,9 @@ from abc import ABC, abstractmethod
 from logging import config
 from typing import Any
 import logging
+
 from app.calculation import Calculation
+
 
 class HistoryObserver(ABC):
     @abstractmethod
@@ -17,7 +19,7 @@ class LoggingObserver(HistoryObserver):
         if calculation is not None:
             logging.info(f"Calculation performed: {calculation.operation}"
                          f" with operands {calculation.operand1} and "
-                         f"{calculation.operand2}")
+                         f"{calculation.operand2}. The result is {calculation.outcome}")
         else:
             raise AttributeError("There cannot be no calculation provided.")
     def notify(self, calculation: Calculation) -> None:
