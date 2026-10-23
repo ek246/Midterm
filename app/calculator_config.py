@@ -30,7 +30,6 @@ class CalculatorConfig:
                 default_encoding: Optional[str] = None):
             project_root = get_project_root()
             self.base_dir = Path(os.getenv('CALCULATOR_LOG_DIR', project_root / 'logs'))
-            self.history_dir = Path(os.getenv('CALCULATOR_HISTORY_DIR', project_root / 'calcHistory'))
             self.max_history = int(os.getenv('CALCULATOR_MAX_HISTORY', 20))
             self.auto_save = os.getenv('CALCULATOR_AUTO_SAVE', 'True').lower() in ('true', '1', 'yes')
             self.precision = int(os.getenv('CALCULATOR_PRECISION', 2))
