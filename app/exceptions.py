@@ -13,3 +13,6 @@ class OperationError(CalculatorError):
 class ConfigurationError(CalculatorError):
     """Exception raised for errors related to invalid calculator configuration."""
     pass
+class invalidOperation(OperationError):
+    """Exception raised for invalid operations."""
+    pass
