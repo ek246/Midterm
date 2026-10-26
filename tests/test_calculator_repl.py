@@ -17,12 +17,12 @@ def test_calculator_repl_help(monkeypatch, capsys):
     assert "history - view calculation history" in captured.out
     assert "clear - clear calculation history" in captured.out
     assert "load - load calculation history from file" in captured.out
-    assert "stop - exit the calculator" in captured.out
+    assert "exit - exit the calculator" in captured.out
     assert "undo - undo the last operation from file" in captured.out
     assert "redo - redo the last undone operation from file" in captured.out
     assert "save - save calculation history to file" in captured.out
 def test_history_lost(monkeypatch, capsys):
-    inputs = iter(["stop"])
+    inputs = iter(["exit"])
     monkeypatch.setattr("builtins.input", lambda _: next(inputs))
 
     def bad_history():
@@ -40,14 +40,14 @@ def test_save_blank_history(monkeypatch, capsys, tmp_path):
     captured = capsys.readouterr()
     assert "No history available." in captured.out 
 def test_history(monkeypatch, capsys):
-    inputs = iter(["add", "2", "3", "history", "stop"])
+    inputs = iter(["add", "2", "3", "history", "exit"])
     monkeypatch.setattr("builtins.input", lambda _: next(inputs))
     repl = calculator_repl()
     captured = capsys.readouterr()
     assert "Result: 5" in captured.out
     assert "addition(2, 3) = 5" in captured.out
 def test_clear_history(monkeypatch, capsys):
-    inputs = iter(["clear", "history", "stop"])
+    inputs = iter(["clear", "history", "exit"])
     monkeypatch.setattr("builtins.input", lambda _: next(inputs))
     repl = calculator_repl()
     captured = capsys.readouterr()
@@ -199,11 +199,11 @@ def test_unexpected_exception(monkeypatch, capsys):
     captured = capsys.readouterr()
     assert "Unexpected error" in captured.out
 def test_input_unknown(monkeypatch, capsys):
-    inputs = iter(["unknown", "stop"])
+    inputs = iter(["unknown", "exit"])
     monkeypatch.setattr("builtins.input", lambda _: next(inputs))
     repl = calculator_repl()
     captured = capsys.readouterr()
-    assert "Calculator has started. Type 'stop' to quit." in captured.out
+    assert "Calculator has started. Type 'exit' to quit." in captured.out
 def test_load_empty_history_logs_message(tmp_path):
     from app.calculator import Calculator
     from app.calculator_config import CalculatorConfig

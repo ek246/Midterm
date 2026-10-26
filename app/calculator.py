@@ -159,7 +159,7 @@ class Calculator:
          return pd.DataFrame(data)
     def show_history(self) -> None:
         for calculation in self.history:
-            print(f"{calculation.operation}({calculation.operand1}, {calculation.operand2}) = {calculation.outcome}")
+            print(Fore.MAGENTA +f"{calculation.operation}({calculation.operand1}, {calculation.operand2}) = {calculation.outcome}")
         if not self.history:
             print(Fore.YELLOW +"No history available.")
     def clear_history(self) -> None:
@@ -188,7 +188,7 @@ def calculator_repl():
         calculator.add_observer(LoggingObserver())
         calculator.add_observer(AutoSaveObserver(calculator))
 
-        print("Calculator has started. Type 'stop' to quit.")
+        print("Calculator has started. Type 'exit' to quit.")
 
         while True:
             try:
@@ -200,12 +200,12 @@ def calculator_repl():
                     print(Fore.CYAN +"history - view calculation history")
                     print(Fore.CYAN +"clear - clear calculation history")
                     print(Fore.CYAN +"load - load calculation history from file")
-                    print(Fore.CYAN +"stop - exit the calculator")
+                    print(Fore.CYAN +"exit - exit the calculator")
                     print(Fore.CYAN +"undo - undo the last operation from file")
                     print(Fore.CYAN +"redo - redo the last undone operation from file")
                     print(Fore.CYAN +"save - save calculation history to file")
                     continue
-                if input_str == "stop":
+                if input_str == "exit":
                     try:
                         calculator.save_history()
                         print(Fore.GREEN +"Stopping the calculator.")
