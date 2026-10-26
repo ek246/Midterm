@@ -78,8 +78,10 @@ class Percentage_Calculation(Operation):
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         self.validate_operands(a, b)
         return (a / b) * 100
-def absolute_difference(a: Decimal, b: Decimal) -> Decimal:
-    return abs(a - b)
+class Absolute_Difference(Operation):
+       def execute(self, a: Decimal, b: Decimal) -> Decimal:
+               self.validate_operands(a, b)
+               return abs(a - b)
 
 class OperationFactory:
     _operations: Dict[str, type] = {
@@ -92,7 +94,7 @@ class OperationFactory:
         'modulus': Modulus,
         'int_division': Int_Division,
         'percentage_calculation': Percentage_Calculation,
-        'absolute_difference': absolute_difference
+        'abs_difference': Absolute_Difference
     }
     @classmethod
     def register_operation(cls, name: str, operation_class: type) -> None:

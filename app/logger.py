@@ -18,7 +18,6 @@ def setup_logger(log_file: Path, log_level: int = logging.INFO) -> None:
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[
             logging.FileHandler(log_file),
-            logging.StreamHandler()
         ],
         force=True  # Ensure that the logging configuration is applied even if logging has been configured before
     )

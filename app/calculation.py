@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 import datetime
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation 
 import logging
 from typing import Any, Dict
-from app.exceptions import OperationError, invalidOperation
+from app.exceptions import OperationError
 
 @dataclass
 class Calculation:
@@ -19,36 +19,36 @@ class Calculation:
 
     def calculate(self) -> Decimal:
         try:
-            if self.operation == 'add':
+            if self.operation == 'addition':
                 return self.operand1 + self.operand2
-            elif self.operation == 'subtract':
+            elif self.operation == 'subtraction':
                 return self.operand1 - self.operand2
-            elif self.operation == 'multiply':
+            elif self.operation == 'multiplication':
                 return self.operand1 * self.operand2
-            elif self.operation == 'divide':
+            elif self.operation == 'division':
                 self._raise_division_by_zero(self.operand2)
                 return self.operand1 / self.operand2
             elif self.operation == 'power':
                 self._raise_negative_power(self.operand1, self.operand2)
                 return self.operand1 ** self.operand2
             elif self.operation == 'root':
-                self._raise_negative_root(self.operand1, self.operand2)
+                self._raise_invalid_root(self.operand1, self.operand2)
                 return Decimal(pow(float(self.operand1), 1 / float(self.operand2)))
             elif self.operation == 'modulus':
                 self._raise_division_by_zero(self.operand2)
                 return self.operand1 % self.operand2
-            elif self.operation == 'integer_division':
+            elif self.operation == 'int_division':
                 self._raise_division_by_zero(self.operand2)
                 return self.operand1 // self.operand2
             elif self.operation == 'percentage_calculation':
-                return (self.operand1 * self.operand2) / Decimal(100)
+                return (self.operand1 / self.operand2) * Decimal(100)
             elif self.operation == 'absolute_difference':
                 return abs(self.operand1 - self.operand2)
             else:
-                raise OperationError(f"Unsupported operation: {self.operation}")
-        except (invalidOperation, TypeError) as e:
+                raise OperationError("This operation is not supported")
+        except (InvalidOperation, TypeError) as e:
             logging.error(f"Error during calculation: {e}")
-            raise OperationError(f"Invalid operands for operation '{self.operation}': {self.operand1}, {self.operand2}") from e
+            raise OperationError(f"Error performing {self.operation}: {e}") from e
     @staticmethod
     def _raise_division_by_zero(operand2: Decimal):
         if operand2 == 0:
@@ -58,14 +58,14 @@ class Calculation:
         if x < 0:
             raise OperationError("Cannot take the root of a negative number.")
         if y == 0:
-            raise OperationError("Cannot take the zeroth root.")
+            raise OperationError("Root cannot be zero.")
 
     @staticmethod
     def _raise_negative_power(x: Decimal, y: Decimal):
-        if x < 0 and y < 1:
-            raise OperationError("Cannot raise a negative number to a fractional power.")
+             if x <0:
+                raise OperationError("This calculator does not support negative exponents.")
 
-    def _to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> Dict[str, Any]:
         return {
             "operation": self.operation,
             "operand1": str(self.operand1),
@@ -87,7 +87,7 @@ class Calculation:
             raise OperationError(f"Invalid data for Calculation: {data}") from e
         saved_outcome = Decimal(data["outcome"])
         if output.outcome != saved_outcome:
-            raise OperationError(f"Outcome mismatch: calculated {output.outcome}, saved {saved_outcome}")
+            logging.warning(f"This is a mismatch: calculated {output.outcome}, saved {saved_outcome}")
         return output
     def __str__(self) -> str:
         return (f"Calculation(operation={self.operation}, "
@@ -107,8 +107,9 @@ class Calculation:
         """
         Format the outcome of the calculation to a specified precision.
         """
-        if precision < 0:
-            raise ValueError("Precision must be a non-negative integer.")
-        return f"{self.outcome:.{precision}f}"
+        try:
+            return str(self.outcome.quantize(Decimal(f"1.{'0'*precision}")))
+        except (InvalidOperation, ArithmeticError) as e:
+            return str(self.outcome)
     
     

@@ -26,6 +26,16 @@ class LoggingObserver(HistoryObserver):
         self.update(calculation)
 
 class AutoSaveObserver(HistoryObserver):
-    def __init__(self, calculator: Any) -> None:
-        if not hasattr(calculator, 'save_history') or not hasattr(calculator, 'config'):
-            raise AttributeError("Calculator must have a 'save_history' method and 'config' attribute.")
+    def __init__(self, calculator: Any):
+        if not hasattr(calculator, "config") or not hasattr(calculator, "save_history"):
+            raise TypeError("Calculator must have 'config' and 'save_history' attributes")
+        self.calculator = calculator
+    def notify(self, calculation: Calculation) -> None:
+        self.update(calculation)
+
+    def update(self, calculation: Calculation) -> None:
+        if calculation is None:
+            raise AttributeError("There cannot be no calculation provided")
+        if self.calculator.config.auto_save:
+            self.calculator.save_history()
+            logging.info("Calculations auto-saved")
