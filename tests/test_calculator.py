@@ -99,6 +99,37 @@ def test_undo(calculator):
      calculator.undo()
      assert calculator.history == []
 
+def test_undo_restores_older_history(calculator):
+        calculator.set_operation(OperationFactory.create_operation("multiplication"))
+        calculator.perform_operation(2, 3)
+        calculator.set_operation(OperationFactory.create_operation("addition"))
+        calculator.perform_operation(2, 3)
+        assert len(calculator.history) == 2
+        assert calculator.undo() is True
+        assert len(calculator.history) == 1
+        assert calculator.history[0].operation == "multiplication"
+        assert calculator.history[0].outcome == 6
+
+def test_redo_recreates_history(calculator):
+    calculator.set_operation(OperationFactory.create_operation("multiplication"))
+    calculator.perform_operation(2, 3)
+    calculator.set_operation(OperationFactory.create_operation("addition"))
+    calculator.perform_operation(2, 3)
+    calculator.undo() 
+    assert len(calculator.history) == 1
+    assert calculator.redo() is True
+    assert calculator.history[0].operation == "multiplication"
+    assert calculator.history[1].operation == "addition"
+    assert calculator.history[1].outcome == 5
+def test_new_operation_empties_redo_stack(calculator):
+    calculator.set_operation(OperationFactory.create_operation("addition"))
+    calculator.perform_operation(3, 3)
+    calculator.undo()
+    assert calculator.redo_stack
+    calculator.set_operation(OperationFactory.create_operation("division"))
+    calculator.perform_operation(4, 2)
+    assert calculator.redo_stack == []
+    assert calculator.redo() is False
 def test_redo(calculator):
      operation = OperationFactory.create_operation("addition")
      calculator.set_operation(operation)
