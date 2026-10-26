@@ -16,8 +16,8 @@ Configuration Setup
     These variables control settings like log and history file directories, maximum size of history, auto-saving history, number of decimal places for calculations, maximum allowed input value, and the default encoding of file operations.
     You can create custom settings if the .env file is missing or you need custom settings. However, these settings must have names expected by CalculatorConfig
 Usage Guide:
-    To activate the calculator, run:
-         python -m app.calculator
+    To activate the calculator, run:/n
+         python -m app.calculator\n
     To see what the calculator can do, type help
     To perform a mathematical operation, choose from this list:
         add, subtract, multiply, divide, power, root, modulus, int_divide, percent, abs_diff
