@@ -13,7 +13,7 @@ def test_calculator_repl_help(monkeypatch, capsys):
     captured = capsys.readouterr()
     assert "\n Things you can do:" in captured.out
     assert("Available operations: addition, subtraction, multiplication, division, power, root," \
-                         "modulus, integer division, percentage calculation, and absolute difference") in captured.out
+                         "modulus, int_divide, percent, and abs_diff") in captured.out
     assert "history - view calculation history" in captured.out
     assert "clear - clear calculation history" in captured.out
     assert "load - load calculation history from file" in captured.out
