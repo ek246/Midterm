@@ -192,7 +192,7 @@ def calculator_repl():
                 if input_str.lower() == "help":
                     print("\n Things you can do:")
                     print("Available operations: addition, subtraction, multiplication, division, power, root," \
-                     "modulus, integer division, percentage calculation, and absolute difference")
+                     "modulus, int_divide, percent, and abs_diff")
                     print("history - view calculation history")
                     print("clear - clear calculation history")
                     print("load - load calculation history from file")
@@ -251,7 +251,7 @@ def calculator_repl():
                         print(f"Error saving history: {e}")
                     continue
                 if input_str in ["add", "subtract", "multiply", "divide", "power", "root", "modulus", 
-                                "int_division", "calculate percentage", "abs_difference" ]:
+                                "int_divide", "percent", "abs_diff" ]:
                     try:
                         print("\nEnter numbers for the operation or type 'c' to cancel")
                         operand_a = input("Enter the first number: ")
@@ -267,10 +267,10 @@ def calculator_repl():
                             "subtract": "subtraction",
                             "multiply": "multiplication",
                             "divide": "division",
-                            "abs_difference": "abs_difference",
-                            "calculate percentage": "percentage_calculation",
+                            "abs_diff": "abs_difference",
+                            "percent": "percentage_calculation",
                             "modulus": "Modulus",
-                            "int_division": "int_division",
+                            "int_divide": "int_division",
                             "power": "Power",
                             "root": "Root"
                         }
