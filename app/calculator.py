@@ -14,6 +14,10 @@ from app.exceptions import OperationError, ValidationError
 from app.calculator_memento import Memento
 from app.input_validators import InputValidators
 from app.operations import Operation, OperationFactory
+from colorama import Fore, just_fix_windows_console, init
+init(autoreset=True)
+
+just_fix_windows_console()
 
 #Type aliases for digits and the calculation results
 Digit = Union[int, float, Decimal]
@@ -157,7 +161,7 @@ class Calculator:
         for calculation in self.history:
             print(f"{calculation.operation}({calculation.operand1}, {calculation.operand2}) = {calculation.outcome}")
         if not self.history:
-            print("No history available.")
+            print(Fore.YELLOW +"No history available.")
     def clear_history(self) -> None:
         self.history.clear()
         self.undo_stack.clear()
@@ -188,25 +192,25 @@ def calculator_repl():
 
         while True:
             try:
-                input_str = input("\nEnter operation: ").lower().strip()
+                input_str = input(Fore.MAGENTA +"\nEnter operation: ").lower().strip()
                 if input_str.lower() == "help":
-                    print("\n Things you can do:")
-                    print("Available operations: addition, subtraction, multiplication, division, power, root," \
+                    print(Fore.CYAN +"\n Things you can do:")
+                    print(Fore.CYAN +"Available operations: addition, subtraction, multiplication, division, power, root," \
                      "modulus, int_divide, percent, and abs_diff")
-                    print("history - view calculation history")
-                    print("clear - clear calculation history")
-                    print("load - load calculation history from file")
-                    print("stop - exit the calculator")
-                    print("undo - undo the last operation from file")
-                    print("redo - redo the last undone operation from file")
-                    print("save - save calculation history to file")
+                    print(Fore.CYAN +"history - view calculation history")
+                    print(Fore.CYAN +"clear - clear calculation history")
+                    print(Fore.CYAN +"load - load calculation history from file")
+                    print(Fore.CYAN +"stop - exit the calculator")
+                    print(Fore.CYAN +"undo - undo the last operation from file")
+                    print(Fore.CYAN +"redo - redo the last undone operation from file")
+                    print(Fore.CYAN +"save - save calculation history to file")
                     continue
                 if input_str == "stop":
                     try:
                         calculator.save_history()
-                        print("Stopping the calculator.")
+                        print(Fore.GREEN +"Stopping the calculator.")
                     except Exception as e:
-                        print(f"History lost: {e}")
+                        print(Fore.RED +f"History lost: {e}")
                     break
                 if input_str == "history":
                     calculator.show_history()
@@ -214,53 +218,53 @@ def calculator_repl():
                 if input_str == "clear":
                     try:
                         calculator.clear_history()
-                        print("Calculation history cleared")
+                        print(Fore.GREEN +"Calculation history cleared")
                     except Exception as e:
-                        print(f"Error clearing history: {e}")
+                        print(Fore.RED +f"Error clearing history: {e}")
                     continue
                 if input_str == "load":
                     try:
                         calculator.load_history()
-                        print("Calculation history loaded")
+                        print(Fore.GREEN +"Calculation history loaded")
                     except Exception as e:
-                        print(f"Error loading history: {e}")
+                        print(Fore.RED +f"Error loading history: {e}")
                     continue
                 if input_str == "undo":
                     try:
                         if calculator.undo():
-                            print("Last operation undone")
+                            print(Fore.GREEN +"Last operation undone")
                         else:
-                            print("No actions to undo.")
+                            print(Fore.YELLOW +"No actions to undo.")
                     except Exception as e:
-                        print(f"Error undoing operation: {e}")
+                        print(Fore.RED+f"Error undoing operation: {e}")
                     continue
                 if input_str == "redo":
                     try:
                         if calculator.redo():
-                            print("Last undone operation redone")
+                            print(Fore.GREEN +"Last undone operation redone")
                         else:
-                            print("No actions to redo.")
+                            print(Fore.YELLOW +"No actions to redo.")
                     except Exception as e:
-                        print(f"Error redoing operation: {e}")
+                        print(Fore.RED +f"Error redoing operation: {e}")
                     continue
                 if input_str == "save":
                     try:
                         calculator.save_history()
-                        print("Calculation history saved")
+                        print(Fore.GREEN +"Calculation history saved")
                     except Exception as e:
-                        print(f"Error saving history: {e}")
+                        print(Fore.RED +f"Error saving history: {e}")
                     continue
                 if input_str in ["add", "subtract", "multiply", "divide", "power", "root", "modulus", 
                                 "int_divide", "percent", "abs_diff" ]:
                     try:
-                        print("\nEnter numbers for the operation or type 'c' to cancel")
-                        operand_a = input("Enter the first number: ")
+                        print(Fore.MAGENTA+ "\nEnter numbers for the operation or type 'c' to cancel")
+                        operand_a = input(Fore.MAGENTA+"Enter the first number: ")
                         if operand_a.lower() == 'c':
-                            print("Operation cancelled")
+                            print(Fore.GREEN +"Operation cancelled")
                             continue
-                        operand_b = input("Enter the second number: ")
+                        operand_b = input(Fore.MAGENTA+ "Enter the second number: ")
                         if operand_b.lower() == 'c':
-                            print("Operation cancelled")
+                            print(Fore.GREEN +"Operation cancelled")
                             continue
                         operation_names = {
                             "add": "addition",
@@ -282,13 +286,13 @@ def calculator_repl():
 
                         print(f"\nResult: {result}")
                     except (OperationError, ValidationError) as e:
-                        print(f"Error: {e}")
+                        print(Fore.RED +f"Error: {e}")
                     continue
             except KeyboardInterrupt:
-                print("\nCalculator stopped.")
+                print(Fore.RED +"\nCalculator stopped.")
                 break
             except EOFError:
-                print("\nNo more input detected. Stopping calculator.")
+                print(Fore.RED +"\nNo more input detected. Stopping calculator.")
                 break
     except Exception as e:
         print(f"Unexpected error: {e}")

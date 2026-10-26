@@ -6,6 +6,8 @@ import os
 from typing import Optional
 from dotenv import load_dotenv
 from app.exceptions import ConfigurationError
+from colorama import Fore, just_fix_windows_console, init
+init(autoreset=True)
 
 load_dotenv()
 
@@ -68,10 +70,10 @@ class CalculatorConfig:
         return Path(os.getenv('CALCULATOR_LOG_FILE', str(self.log_dir / 'app.log')))
     def validate(self) -> None:
          if self.max_history <= 0:
-            raise ConfigurationError("max_history must be a positive integer.")
+            raise ConfigurationError(Fore.RED +"max_history must be a positive integer.")
          if self.precision < 0:
-            raise ConfigurationError("precision can't be 0 or negative")
+            raise ConfigurationError(Fore.RED +"precision can't be 0 or negative")
          if self.max_input_value <= 0:
-            raise ConfigurationError("max_input_value must be a positive number.")
+            raise ConfigurationError(Fore.RED +"max_input_value must be a positive number.")
          if not self.base_dir.exists():
-            raise ConfigurationError(f"Base directory {self.base_dir} does not exist.")
+            raise ConfigurationError(Fore.RED +f"Base directory {self.base_dir} does not exist.")

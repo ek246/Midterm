@@ -3,6 +3,9 @@ from typing import Any
 from decimal import Decimal, InvalidOperation
 from app.calculator_config import CalculatorConfig
 from app.exceptions import ValidationError
+from colorama import Fore, just_fix_windows_console, init
+init(autoreset=True)
+
 
 @dataclass
 class InputValidators:
@@ -14,7 +17,7 @@ class InputValidators:
                 value = value.strip()
             number = Decimal(str(value))
             if abs(number) > config.max_input_value:
-                raise ValidationError(f"Input value number exceeds the maximum allowed value of {config.max_input_value}.")
+                raise ValidationError(Fore.RED +f"Input value number exceeds the maximum allowed value of {config.max_input_value}.")
             return number.normalize()
         except (InvalidOperation) as e:
-            raise ValidationError(f"Invalid input: {value}. Please enter a valid number.") from e
+            raise ValidationError(Fore.RED +f"Invalid input: {value}. Please enter a valid number.") from e

@@ -4,6 +4,10 @@ from decimal import Decimal, InvalidOperation
 import logging
 from typing import Any, Dict
 from app.exceptions import OperationError
+from colorama import Fore, just_fix_windows_console, init
+init(autoreset=True)
+
+just_fix_windows_console()
 
 @dataclass
 class Calculation:
@@ -45,25 +49,25 @@ class Calculation:
             elif self.operation == 'absolute_difference':
                 return abs(self.operand1 - self.operand2)
             else:
-                raise OperationError("This operation is not supported")
+                raise OperationError(Fore.YELLOW +"This operation is not supported")
         except (InvalidOperation, TypeError) as e:
             logging.error(f"Error during calculation: {e}")
-            raise OperationError(f"Error performing {self.operation}: {e}") from e
+            raise OperationError(Fore.RED +f"Error performing {self.operation}: {e}") from e
     @staticmethod
     def _raise_division_by_zero(operand2: Decimal):
         if operand2 == 0:
-            raise OperationError("You cannot divide by zero.")
+            raise OperationError(Fore.RED +"You cannot divide by zero.")
     @staticmethod
     def _raise_invalid_root(x: Decimal, y: Decimal):
         if x < 0:
-            raise OperationError("Cannot take the root of a negative number.")
+            raise OperationError(Fore.RED +"Cannot take the root of a negative number.")
         if y == 0:
-            raise OperationError("Root cannot be zero.")
+            raise OperationError(Fore.RED +"Root cannot be zero.")
 
     @staticmethod
     def _raise_negative_power(x: Decimal, y: Decimal):
              if x <0:
-                raise OperationError("This calculator does not support negative exponents.")
+                raise OperationError(Fore.YELLOW +"This calculator does not support negative exponents.")
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -84,7 +88,7 @@ class Calculation:
                 timeOfCalc=datetime.datetime.fromisoformat(data["timeOfCalc"])
             )
         except(ValueError, ArithmeticError) as e:
-            raise OperationError(f"Invalid data for Calculation: {data}") from e
+            raise OperationError(Fore.RED +f"Invalid data for Calculation: {data}") from e
         saved_outcome = Decimal(data["outcome"])
         if output.outcome != saved_outcome:
             logging.warning(f"This is a mismatch: calculated {output.outcome}, saved {saved_outcome}")

@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 from decimal import Decimal
 from typing import Dict
 from app.exceptions import ValidationError, OperationError
+from colorama import Fore, just_fix_windows_console, init
+init(autoreset=True)
 class Operation(ABC):
     @abstractmethod
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
@@ -32,14 +34,14 @@ class Division(Operation):
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         self.validate_operands(a, b)
         if b == 0:
-            raise OperationError("You cannot divide by zero.")
+            raise OperationError(Fore.RED +"You cannot divide by zero.")
         return a / b
 
 class Power(Operation):
     def validate_operands(self, a: Decimal, b: Decimal) -> None:
         super().validate_operands(a, b)
         if b < 0:
-            raise ValidationError("Negative power is not allowed")
+            raise ValidationError(Fore.RED +"Negative power is not allowed")
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         self.validate_operands(a, b)
         return a ** b
@@ -48,9 +50,9 @@ class Root(Operation):
     def validate_operands(self, a: Decimal, b: Decimal) -> None:
         super().validate_operands(a,b)
         if a < 0:
-            raise ValidationError("The root cannot be negative.")
+            raise ValidationError(Fore.RED +"The root cannot be negative.")
         if b == 0:
-            raise ValidationError("Zero root is undefined.")
+            raise ValidationError(Fore.RED +"Zero root is undefined.")
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         self.validate_operands(a, b)
         return Decimal(pow(float(a), 1 / float(b)))
@@ -58,7 +60,7 @@ class Modulus(Operation):
     def validate_operands(self, a: Decimal, b: Decimal) -> None:
         super().validate_operands(a, b)
         if b == 0:
-            raise OperationError("You cannot divide by zero.")
+            raise OperationError(Fore.RED +"You cannot divide by zero.")
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         self.validate_operands(a, b)
         return a % b
@@ -66,7 +68,7 @@ class Int_Division(Operation):
     def validate_operands(self, a: Decimal, b: Decimal) -> None:
         super().validate_operands(a, b)
         if b == 0:
-            raise OperationError("You cannot divide by zero.")
+            raise OperationError(Fore.RED +"You cannot divide by zero.")
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         self.validate_operands(a, b)
         return a // b
@@ -74,7 +76,7 @@ class Percentage_Calculation(Operation):
     def validate_operands(self, a: Decimal, b: Decimal) -> None:
         super().validate_operands(a, b)
         if b == 0:
-            raise OperationError("You cannot divide by zero.")
+            raise OperationError(Fore.RED +"You cannot divide by zero.")
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         self.validate_operands(a, b)
         return (a / b) * 100
@@ -99,11 +101,11 @@ class OperationFactory:
     @classmethod
     def register_operation(cls, name: str, operation_class: type) -> None:
         if not issubclass(operation_class, Operation):
-            raise TypeError("operation_class must be a subclass of Operation.")
+            raise TypeError(Fore.RED +"operation_class must be a subclass of Operation.")
         cls._operations[name.lower()] = operation_class
     @classmethod
     def create_operation(cls, operation_type: str) -> Operation:
         operation_types = cls._operations.get(operation_type.lower())
         if not operation_types:
-            raise ValueError("The operation type is not registered.")
+            raise ValueError(Fore.RED +"The operation type is not registered.")
         return operation_types()

@@ -4,6 +4,9 @@ from typing import Any
 import logging
 
 from app.calculation import Calculation
+from colorama import Fore, just_fix_windows_console, init
+init(autoreset=True)
+
 
 
 class HistoryObserver(ABC):
@@ -28,14 +31,14 @@ class LoggingObserver(HistoryObserver):
 class AutoSaveObserver(HistoryObserver):
     def __init__(self, calculator: Any):
         if not hasattr(calculator, "config") or not hasattr(calculator, "save_history"):
-            raise TypeError("Calculator must have 'config' and 'save_history' attributes")
+            raise TypeError(Fore.RED +"Calculator must have 'config' and 'save_history' attributes")
         self.calculator = calculator
     def notify(self, calculation: Calculation) -> None:
         self.update(calculation)
 
     def update(self, calculation: Calculation) -> None:
         if calculation is None:
-            raise AttributeError("There cannot be no calculation provided")
+            raise AttributeError(Fore.RED +"There cannot be no calculation provided")
         if self.calculator.config.auto_save:
             self.calculator.save_history()
             logging.info("Calculations auto-saved")
